@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<body>
+<h3>test</h3>
+<a href="test?id=1">点我发请求</a><br>
+<a href="/shiro-test?name=1&pwd=青铜">shiro-test</a><br>
+<a href="/redis-put?key=1111111&value=冯风风">存入redis测试</a>
+<a href="/redis-get?key=1111111">取出入redis测试</a><br>
+<span onclick="sendmsg()"> 测试一下</span>
+<div id="info"></div>
+</body>
+<script>
+
+    //步骤一:创建异步对象
+    var ajax = new XMLHttpRequest();
+    //步骤二:设置请求的url参数,参数一是请求的类型,参数二是请求的url,可以带参数,动态的传递参数starName到服务端
+    ajax.open('get','/shiro-test?name=1&pwd=青铜');
+    //步骤三:发送请求
+    ajax.send();
+    //步骤四:注册事件 onreadystatechange 状态改变就会调用
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState==4 &&ajax.status==200) {
+            //步骤五 如果能够进到这个判断 说明 数据 完美的回来了,并且请求的页面是存在的
+            console.log(ajax.responseText);//输入相应的内容
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+var test = document.getElementById('info');
+
+var Ajax ={
+    get: function (url,fn) {
+        //xmlhttprequest对象用于在后台与服务器交换数据
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET',url,true);
+        xhr.onreadystatechange = function () {
+            //redaystate == 4 说明请求已完成
+            if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) {
+                //从服务器获取数据
+                fn.call(this, xhr.responseText);
+                 //   success(ajax.responseText);
+                //console.log(xhr.responseText);//输入相应的内容
+                alert(xhr.responseText);
+
+            }
+        };
+        xhr.send();
+    },
+    // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
+    post: function (url,data,fn) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST',url,true);
+        //添加http头  发送消息到服务器时内容编码类型
+        xhr.setRequestHeader("Content-Type","aapplication/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+                console.log(Ajax.responseText);//输入相应的内容
+                fn.call(this,xhr.responseText);
+            }
+        };
+        xhr.send(data);
+    }
+}
+function sendmsg() {
+    function aaa(){}
+    // var res;
+    Ajax.get("/shiro-test?name=1&pwd=青铜",aaa);
+    //var data=eval("("+test+")").SERVERPARTObject;
+
+
+
+}
+    
+</script>
+</html>
